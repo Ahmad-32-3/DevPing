@@ -1,0 +1,25 @@
+{
+  "name": "github-actions-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahmad15523/github-actions-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ahmad15523/github-actions-bot/issues"
+  },
+  "homepage": "https://github.com/Ahmad15523/github-actions-bot#readme",
+  "dependencies": {
+    "@octokit/rest": "^21.1.1",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2"
+  }
+}
