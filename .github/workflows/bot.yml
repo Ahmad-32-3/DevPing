@@ -24,6 +24,12 @@ jobs:
           -d '{"reviewers":["your_github_username"]}' \
           https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers
 
-      - name: Send Slack Notification
-        run: |
-          curl -X POST -H "Content-type: application/json" --data '{"text":"A new pull request has been opened: ${{ github.event.pull_request.html_url }}"}' $SLACK_WEBHOOK_URL
+          - name: Send Slack Notification
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK }}  # Use the GitHub secret named "SLACK"
+          run: |
+            echo "Sending Slack notification to $SLACK_WEBHOOK_URL"
+            curl -X POST -H "Content-type: application/json" \
+              --data '{"text":"A new pull request has been opened: '${{ github.event.pull_request.html_url }}'"}' \
+              "$SLACK_WEBHOOK_URL"
+        
