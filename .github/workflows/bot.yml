@@ -7,16 +7,22 @@ on:
 jobs:
   review:
     permissions:
-        contents: read
-        pull-requests: write
+      contents: read
+      pull-requests: write  # Explicitly grant write access to pull requests
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      
+
       - name: Assign reviewers
         run: |
           curl -X POST \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
           -d '{"reviewers":["your_github_username"]}' \
           https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers
+
+      - name: Send Slack Notification
+        run: |
+          curl -X POST -H "Content-type: application/json" --data '{"text":"A new pull request has been opened: ${{ github.event.pull_request.html_url }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
