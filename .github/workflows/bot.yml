@@ -26,7 +26,7 @@ jobs:
           PAT: ${{ secrets.PAT }}
 
       - name: Send Slack notification
-        uses: rtCamp/action-slack-notify@v3
+        uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK }}
           SLACK_CHANNEL: "#your-channel"
