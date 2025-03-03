@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Octokit } = require('@octokit/rest');
 const fetch = require('node-fetch');
 
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+const octokit = new Octokit({ auth: process.env.PAT });
 
 const REPO_OWNER = 'Ahmad15523';  
 const REPO_NAME = 'github-actions-bot';
@@ -19,7 +19,7 @@ async function autoAssignReviewers(prNumber) {
 }
 
 async function sendSlackNotification(message) {
-    await fetch(process.env.SLACK_WEBHOOK_URL, {
+    await fetch(process.env.SLACK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: message })
