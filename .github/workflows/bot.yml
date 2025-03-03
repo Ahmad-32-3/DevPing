@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  process_pr:
+  review:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -15,43 +15,21 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Create .env file
+      - name: Assign reviewers
         run: |
-          echo "PAT=${{ secrets.PAT }}" > .env
-          echo "REPO_OWNER=${{ github.repository_owner }}" >> .env
-          echo "REPO_NAME=${{ github.event.repository.name }}" >> .env
-          echo "REVIEWERS=${{ secrets.REVIEWERS || github.repository_owner }}" >> .env
-          echo "SLACK=${{ secrets.SLACK }}" >> .env
-
-      - name: Run PR processing script
-        run: |
-          node -e "
-          const fs = require('fs');
-          const { handlePullRequest } = require('./index.js');
-          
-          // Read the event payload
-          const eventPayload = JSON.parse(fs.readFileSync('${{ github.event_path }}', 'utf8'));
-          
-          // Process the pull request
-          handlePullRequest(eventPayload)
-            .then(result => {
-              console.log('Processing result:', result);
-              if (!result.success) process.exit(1);
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              process.exit(1);
-            });
-          "
+          curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.PAT }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -d '{"reviewers":["your_github_username"]}' \
+          "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers"
         env:
           PAT: ${{ secrets.PAT }}
-          SLACK: ${{ secrets.SLACK }}
+
+      - name: Send Slack notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK }}
+          SLACK_CHANNEL: "#your-channel"
+          SLACK_USERNAME: "GitHub Actions Bot"
+          SLACK_ICON_EMOJI: ":robot_face:"
+          SLACK_MESSAGE: "A new pull request has been created in the repository ${{ github.repository }} by ${{ github.actor }}."
