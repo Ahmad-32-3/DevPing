@@ -4,9 +4,6 @@ const fetch = require('node-fetch');
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
-// Testing Pull Request
-console.log("Hello World");
-
 const REPO_OWNER = 'Ahmad15523';  
 const REPO_NAME = 'github-actions-bot';
 const REVIEWERS = ['Ahmad15523'];  

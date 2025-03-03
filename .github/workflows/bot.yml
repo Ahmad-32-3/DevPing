@@ -10,23 +10,25 @@ jobs:
     permissions:
       pull-requests: write
       contents: read
-      
+
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Assign reviewers
         run: |
           curl -X POST \
-          -H "Authorization: token ${{ secrets.PAT }}" \
+          -H "Authorization: Bearer ${{ secrets.PAT }}" \
           -H "Accept: application/vnd.github.v3+json" \
           -d '{"reviewers":["your_github_username"]}' \
-          https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers
+          "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers"
+        env:
+          PAT: ${{ secrets.PAT }}
 
       - name: Send Slack notification
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK }}
           SLACK_CHANNEL: "#your-channel"
           SLACK_USERNAME: "GitHub Actions Bot"
           SLACK_ICON_EMOJI: ":robot_face:"
