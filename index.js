@@ -6,7 +6,6 @@ const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
 // Testing Pull Request
 console.log("Hello World");
-console.log("Secondary test");
 
 const REPO_OWNER = 'Ahmad15523';  
 const REPO_NAME = 'github-actions-bot';
