@@ -1,4 +1,3 @@
-
 name: GitHub Actions Bot
 
 on:
@@ -8,13 +7,27 @@ on:
 jobs:
   review:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+      
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      
+
       - name: Assign reviewers
         run: |
           curl -X POST \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Authorization: token ${{ secrets.PAT }}" \
+          -H "Accept: application/vnd.github.v3+json" \
           -d '{"reviewers":["your_github_username"]}' \
           https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers
+
+      - name: Send Slack notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: "#your-channel"
+          SLACK_USERNAME: "GitHub Actions Bot"
+          SLACK_ICON_EMOJI: ":robot_face:"
+          SLACK_MESSAGE: "A new pull request has been created in the repository ${{ github.repository }} by ${{ github.actor }}."
