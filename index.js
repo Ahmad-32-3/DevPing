@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Octokit } = require('@octokit/rest');
 const fetch = require('node-fetch');
 
+// auth kit
 const octokit = new Octokit({ auth: process.env.PAT });
 
 const REPO_OWNER = 'Ahmad15523';  
