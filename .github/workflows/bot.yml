@@ -1,4 +1,4 @@
-name: GitHub Actions Bot
+name: DevPing Bot
 
 on:
   pull_request:
