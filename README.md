@@ -43,12 +43,11 @@ Examine the workflow file and modify it as needed, especially the reviewer usern
 4. Commit and Push Your Changes
 After configuring your workflow and secrets, commit and push your changes:
 
-sh
-Copy
-Edit
+git checkout newBranch
 git add .
 git commit -m "Setup ReviewFlow bot"
-git push origin main
+gh pr create
+
 Usage
 After ReviewFlow is set up:
 

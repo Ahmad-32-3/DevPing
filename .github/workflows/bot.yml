@@ -23,7 +23,7 @@ jobs:
           -d '{"reviewers":["your_github_username"]}' \
           "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers"
         env:
-          PAT: ${{ secrets.PAT }}
+          PAT: ${{ secrets.PERMA_TOKEN }}
 
       - name: Send Slack notification
         uses: rtCamp/action-slack-notify@v2
