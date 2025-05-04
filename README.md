@@ -1,61 +1,89 @@
- ReviewFlow: The GitHub PR Automation Bot
+# DevPing: GitHub PR Automation Bot
 
 ## Overview
-ReviewFlow is a GitHub Actions–based bot designed to automate key repository management tasks. It streamlines the pull request review process by automatically assigning reviewers and sending notifications to your Slack channel whenever a pull request is created. By reducing manual intervention, ReviewFlow helps ensure that pull requests receive timely attention and that your team stays informed throughout the development process.
+
+DevPing is a GitHub Actions–powered bot that helps your team stay on top of pull requests.  
+It automatically assigns reviewers and sends Slack notifications, reducing manual effort and helping your team work more efficiently.
+
+---
 
 ## Features
-- **Automatic Reviewer Assignment:** When a pull request is opened, updated, or reopened, ReviewFlow automatically assigns specified reviewers, ensuring that your code is promptly reviewed.
-- **Slack Notifications:** The bot sends clear, detailed notifications to a designated Slack channel whenever a new pull request is created.
-- **CI/CD Integration:** Integrated into your GitHub Actions pipeline, ReviewFlow runs automatically on pull request events with no extra effort from you.
-- **Extensible Design:** The architecture allows for future enhancements, such as additional automated tasks or customized notification formats.
 
-## Prerequisites
-Before you set up ReviewFlow, ensure that you have:
-- A GitHub account with the necessary repository permissions.
-- A Slack workspace and a valid Slack webhook URL.
-- A GitHub Personal Access Token (PAT) with the required permissions (at minimum, the token should have "repo" and "pull_requests" scopes). Note that the built-in `GITHUB_TOKEN` does not provide sufficient privileges for assigning reviewers.
-- Basic familiarity with Git, GitHub Actions, and managing repository secrets.
+- **Automatic reviewer assignment** when a pull request is opened, updated, or reopened.
+- **Slack notifications** for new pull requests sent directly to your configured channel.
+- **Seamless GitHub Actions integration** — no external setup or services required.
+- **Fully customizable** for your team’s needs, including reviewer lists and notification formatting.
 
-## Setup and Installation
+---
+
+## Requirements
+
+Before setting up DevPing, make sure you have:
+
+- A GitHub repository with admin or write access.
+- A Slack workspace with an active Slack **Incoming Webhook URL**.
+- A GitHub **Personal Access Token (PAT)** with:
+  - `repo` scope (repository access)
+  - `pull_requests` scope (for assigning reviewers)
+
+> **Note:** GitHub’s built-in `GITHUB_TOKEN` does **not** have permission to assign reviewers.
+
+---
+
+## Setup Steps
 
 ### 1. Clone the Repository
-Open your terminal and run:
-```sh
+
+```bash
 git clone https://github.com/YOUR_USERNAME/github-actions-bot.git
 cd github-actions-bot
-
 Replace YOUR_USERNAME with your GitHub username.
 
-2. Configure GitHub Secrets
-In your GitHub repository, navigate to Settings → Secrets and Variables → Actions. Create or update the following secrets:
+2. Add Required Secrets
+In your GitHub repository:
 
-PAT: Your GitHub Personal Access Token. Ensure this token has "repo" and "pull_requests" permissions.
-SLACK: Your Slack webhook URL.
-The secret names must match exactly as referenced in the workflow file.
+Go to Settings → Secrets and Variables → Actions.
 
-3. Review and Customize the Workflow File
-The GitHub Actions workflow is defined in the .github/workflows/ directory. It includes the following steps:
+Add these two secrets:
 
-Assigning Reviewers: A curl command is used with your PAT to request reviewers for pull requests.
-Sending Slack Notifications: The workflow uses the rtCamp/action-slack-notify@v2 action to notify your team about new pull requests.
-Examine the workflow file and modify it as needed, especially the reviewer usernames and Slack channel settings.
+GITHUB_PAT → your personal GitHub token.
+
+SLACK_WEBHOOK_URL → your Slack webhook URL.
+
+Make sure these secret names match what’s referenced in the workflow.
+
+3. Review the Workflow
+Open the workflow file:
+
+bash
+Copy
+.github/workflows/bot.yml
+By default, the workflow:
+
+Assigns reviewers using the GitHub API.
+
+Sends Slack notifications with pull request details.
+
+You can customize:
+
+Which reviewers are assigned.
+
+How the Slack message is formatted.
 
 4. Commit and Push Your Changes
-After configuring your workflow and secrets, commit and push your changes:
-
-git checkout newBranch
+bash
+Copy
+git checkout -b newBranch
 git add .
-git commit -m "Setup ReviewFlow bot"
-gh pr create
+git commit -m "Set up DevPing bot"
+git push origin newBranch
+How It Works
+Once set up:
 
-Usage
-After ReviewFlow is set up:
+When you open or update a pull request, the workflow automatically triggers.
 
-When you create or update a pull request in your repository, the workflow will trigger automatically.
-The bot will assign the specified reviewers to the pull request.
-A notification with pull request details will be sent to your configured Slack channel.
-You can monitor the workflow logs in the GitHub Actions tab to confirm that everything is running correctly.
-Troubleshooting
-Bad Credentials Error: Ensure that your PAT is correctly configured in GitHub Secrets and has the necessary permissions.
-Missing Slack Notification: Verify that your Slack webhook URL is correct and that the secret name in your workflow matches.
-Workflow Not Triggering: Confirm that the pull request events (opened, synchronize, reopened) are correctly defined in your workflow.
+Reviewers are assigned based on your configuration.
+
+A Slack notification is sent with pull request details.
+
+You can monitor the workflow under the Actions tab in your GitHub repository.
